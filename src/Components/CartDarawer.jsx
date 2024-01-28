@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
+import { DataContext } from "../context/DataContext";
+import Cart from "./Cart";
 
 const CartDarawer = () => {
+  const {toggleCartDrawedr,carts}=useContext(DataContext);
   return (
     <section
       className="cart-box flex flex-col border-s-2 border-neutral-600 fixed w-96 h-screen bg-white top-0 right-0 z-50 duration-300"
@@ -16,12 +19,13 @@ const CartDarawer = () => {
                 id="cartBodyCount"
                 className="text-xs w-4 h-4 bg-red-500 inline-flex justify-center items-center text-white"
               >
-                0
+                {carts.length}
               </span>
             </p>
           </div>
           <div className="control-btn flex gap-2">
             <button
+          onClick={toggleCartDrawedr}
               className="border duration-100 active:scale-90 border-neutral-600 h-12 w-12 flex justify-center items-center"
               id="cartCloseBtn"
             >
@@ -45,16 +49,20 @@ const CartDarawer = () => {
       </div>
       <div className="cart-body flex-grow flex flex-col overflow-scroll p-5">
         <div className="cart-empty-stage m-auto hidden last:block text-center w-3/4">
-          <img src="/assets/empty-cart-587700a3.svg"  />
+          <img src="https://mms-cart.netlify.app/assets/empty-cart-587700a3.svg"  />
           <p className="font-heading">There is no item in cart</p>
         </div>
+        {carts.map((cart)=><Cart key={cart.Product_id} cart={cart}/>)}
+
       </div>
       <div className="cart-footer px-3 border-t-2 border-neutral-600">
         <div className="flex flex-col justify-start py-3">
           <div className="text-end">
             <p className="text-neutral-500">Total Cost</p>
             <h1 className="font-heading font-bold text-2xl">
-              $ <span id="cartCostTotal">0</span>
+              $ <span id="cartCostTotal">
+                {carts.reduce((pv,cv)=>pv+cv.cost,0)}
+              </span>
             </h1>
           </div>
           <button
